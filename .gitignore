@@ -3,3 +3,5 @@
 !.env.example
 node_modules/
 .vercel/
+
+/mustafa-portfolio/
