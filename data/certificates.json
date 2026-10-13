@@ -1,0 +1,162 @@
+{
+  "categories": [
+    {
+      "id": "frontend",
+      "label": "Frontend"
+    },
+    {
+      "id": "data",
+      "label": "Data & AI"
+    },
+    {
+      "id": "training",
+      "label": "Training"
+    },
+    {
+      "id": "other",
+      "label": "Other"
+    }
+  ],
+  "certificates": [
+    {
+      "id": "depi-react-frontend-web-developer",
+      "title": "React Frontend Web Developer",
+      "issuer": "Digital Egypt Pioneers Initiative (DEPI)",
+      "date": "Nov 2025 – Jul 2026",
+      "category": "frontend",
+      "type": "Achievement",
+      "alt": "Certificate of Achievement for the React Frontend Web Developer track of the Digital Egypt Pioneers Program, sponsored by Egypt's Ministry of Communications and Information Technology",
+      "image": "assets/certificates/depi-react-frontend-web-developer.jpg",
+      "thumb": "assets/certificates/depi-react-frontend-web-developer-thumb.jpg",
+      "imageSize": [
+        1599,
+        1131
+      ],
+      "thumbSize": [
+        640,
+        453
+      ],
+      "verifyUrl": null
+    },
+    {
+      "id": "nti-web-designer-summer-training",
+      "title": "Web Designer — Summer Training",
+      "issuer": "National Telecommunication Institute (NTI) & ITIDA",
+      "date": "16 Aug – 10 Sep 2026",
+      "category": "frontend",
+      "type": "Training",
+      "alt": "Certificate of Training for a 120-hour Web Designer summer training course at NTI, from 16 August to 10 September 2026",
+      "image": "assets/certificates/nti-web-designer-summer-training.jpg",
+      "thumb": "assets/certificates/nti-web-designer-summer-training-thumb.jpg",
+      "imageSize": [
+        1080,
+        827
+      ],
+      "thumbSize": [
+        640,
+        490
+      ],
+      "verifyUrl": null
+    },
+    {
+      "id": "itida-gigs-freelance-training",
+      "title": "ITIDA Gigs — Freelance Training Program",
+      "issuer": "ITIDA & EYouth",
+      "date": null,
+      "category": "training",
+      "type": "Achievement",
+      "alt": "Certificate of Achievement for graduating from the three-month ITIDA Gigs freelance training program",
+      "image": "assets/certificates/itida-gigs-freelance-training.jpg",
+      "thumb": "assets/certificates/itida-gigs-freelance-training-thumb.jpg",
+      "imageSize": [
+        1600,
+        1126
+      ],
+      "thumbSize": [
+        640,
+        450
+      ],
+      "verifyUrl": null
+    },
+    {
+      "id": "huawei-overview-of-ai",
+      "title": "Overview of AI",
+      "issuer": "Huawei ICT Academy",
+      "date": "16 Sep 2026",
+      "category": "data",
+      "type": "Completion",
+      "alt": "Huawei ICT Academy certificate of completion for the Overview of AI course, issued 16 September 2026",
+      "image": "assets/certificates/huawei-overview-of-ai.jpg",
+      "thumb": "assets/certificates/huawei-overview-of-ai-thumb.jpg",
+      "imageSize": [
+        1131,
+        1600
+      ],
+      "thumbSize": [
+        452,
+        640
+      ],
+      "verifyUrl": null
+    },
+    {
+      "id": "genai-business-academia-workshop",
+      "title": "GenAI for Business & Academia Workshop",
+      "issuer": "Egyptian Russian University — Faculty of Management, Economics & Business Technology",
+      "date": "25 Nov 2025",
+      "category": "data",
+      "type": "Participation",
+      "alt": "Certificate of participation in the GenAI for Business and Academia workshop at the Egyptian Russian University, 25 November 2025",
+      "image": "assets/certificates/genai-business-academia-workshop.jpg",
+      "thumb": "assets/certificates/genai-business-academia-workshop-thumb.jpg",
+      "imageSize": [
+        1080,
+        775
+      ],
+      "thumbSize": [
+        640,
+        459
+      ],
+      "verifyUrl": null
+    },
+    {
+      "id": "decoding-success-day",
+      "title": "Decoding Success Day",
+      "issuer": "Egyptian Russian University & Statistical Analysis and Data Management Center (SADMC)",
+      "date": "4 Nov 2025",
+      "category": "data",
+      "type": "Participation",
+      "alt": "Certificate of participation in Decoding Success Day, organised by the Egyptian Russian University and SADMC, 4 November 2025",
+      "image": "assets/certificates/decoding-success-day.jpg",
+      "thumb": "assets/certificates/decoding-success-day-thumb.jpg",
+      "imageSize": [
+        1600,
+        1131
+      ],
+      "thumbSize": [
+        640,
+        452
+      ],
+      "verifyUrl": null
+    },
+    {
+      "id": "v-international-olympiad-financial-security",
+      "title": "V International Olympiad on Financial Security",
+      "issuer": "Selection stage participant",
+      "date": null,
+      "category": "other",
+      "type": "Participation",
+      "alt": "Certificate confirming participation in the selection stage of the V International Olympiad on Financial Security",
+      "image": "assets/certificates/v-international-olympiad-financial-security.jpg",
+      "thumb": "assets/certificates/v-international-olympiad-financial-security-thumb.jpg",
+      "imageSize": [
+        1080,
+        1536
+      ],
+      "thumbSize": [
+        450,
+        640
+      ],
+      "verifyUrl": null
+    }
+  ]
+}
