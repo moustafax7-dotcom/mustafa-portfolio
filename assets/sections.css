@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Certificates gallery, certificate viewer, Dev Playground (both games).
+   Loaded without blocking first paint (see <link media="print" onload>).
+   Uses the tokens from style.css (--s1, --s2, --ln, --blue, --t1…).
+   ========================================================================== */
+
+/* ── Skills: inline SVG icons match the font icons ── */
+.sk-card .sk-svg { width: 42px; height: 42px; position: relative; z-index: 1; transition: transform .3s var(--ease) }
+.sk-card:hover .sk-svg { transform: scale(1.12) translateY(-2px) }
+
+/* ── Gallery ── */
+.cert-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px }
+.cert-filter {
+  font: 500 13px/1 var(--font-body); color: var(--t2); background: var(--s2);
+  border: 1px solid var(--ln); border-radius: 999px; padding: 11px 16px; min-height: 40px;
+  cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 8px
+}
+.cert-filter:hover { color: var(--t1); border-color: rgba(255,255,255,.18) }
+.cert-filter[aria-pressed="true"] { color: #fff; background: rgba(79,142,247,.16); border-color: rgba(79,142,247,.55) }
+.cert-filter-n { font: 500 11px var(--mono); color: var(--t3) }
+.cert-filter[aria-pressed="true"] .cert-filter-n { color: #b9d0ff }
+
+.cert-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 18px }
+.cert-item { min-width: 0; display: flex; flex-direction: column }
+.cert-tile {
+  all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; width: 100%; height: 100%;
+  background: var(--s2); border: 1px solid var(--ln); border-radius: 18px; overflow: hidden;
+  transition: transform .3s var(--ease), border-color .3s, box-shadow .3s
+}
+.cert-tile:hover { transform: translateY(-4px); border-color: rgba(79,142,247,.45); box-shadow: 0 18px 40px rgba(0,0,0,.45) }
+.cert-tile:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+.cert-thumb { display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 3; background: #0b0c11; border-bottom: 1px solid var(--ln); overflow: hidden }
+.cert-thumb img { width: 100%; height: 100%; object-fit: contain; transition: transform .5s var(--ease) }
+.cert-tile:hover .cert-thumb img { transform: scale(1.04) }
+.cert-body { display: flex; flex-direction: column; gap: 6px; padding: 18px 18px 20px; flex: 1 }
+.cert-cat { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--blue) }
+.cert-title { font-size: 16px; font-weight: 600; line-height: 1.35; color: var(--t1) }
+.cert-issuer { font-size: 13px; line-height: 1.5; color: var(--t2) }
+.cert-date { font: 400 12px var(--mono); color: var(--t3) }
+.cert-view { margin-top: auto; padding-top: 10px; font-size: 13px; font-weight: 600; color: var(--blue) }
+.cert-verify { margin-top: 8px; font-size: 13px; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; padding: 4px 0; min-height: 24px }
+.cert-item[hidden] { display: none }
+
+/* ── Viewer (native <dialog>) ── */
+.cert-viewer {
+  border: 1px solid var(--ln); border-radius: 20px; padding: 0; background: #07080c; color: var(--t1);
+  width: min(1100px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - 24px); overflow: hidden;
+  /* the site-wide `* { margin: 0 }` reset would otherwise pin the dialog to the top-left corner */
+  margin: auto; inset: 0
+}
+.cert-viewer[open] { display: flex; flex-direction: column }
+.cert-viewer::backdrop { background: rgba(2,3,6,.9) }
+.cert-viewer { overscroll-behavior: contain }
+.cv-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 16px 18px 12px }
+.cv-meta { min-width: 0 }
+.cv-count { font: 500 11px var(--mono); letter-spacing: .08em; color: var(--t3); margin: 0 0 4px }
+.cv-title { font-size: 17px; font-weight: 600; line-height: 1.3; margin: 0 }
+.cv-sub { font-size: 13px; line-height: 1.5; color: var(--t2); margin: 4px 0 0 }
+.cv-btn {
+  all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; flex: none;
+  width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.07); border: 1px solid var(--ln);
+  color: var(--t1); font-size: 22px; line-height: 1; transition: background .2s
+}
+.cv-btn:hover { background: rgba(79,142,247,.3) }
+.cv-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+.cv-btn[disabled] { opacity: .35; cursor: default }
+.cv-stage { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 12px 6px; touch-action: pan-y }
+.cv-fig { margin: 0; flex: 1; min-width: 0; min-height: 200px; display: grid; place-items: center }
+.cv-img { max-width: 100%; max-height: calc(100dvh - 190px); width: auto; height: auto; border-radius: 8px; background: #fff; box-shadow: 0 10px 40px rgba(0,0,0,.5); opacity: 0; transition: opacity .25s }
+.cv-img.is-ready { opacity: 1 }
+.cv-state, .cv-error { grid-area: 1 / 1; color: var(--t2); font-size: 14px; text-align: center; padding: 0 16px; margin: 0 }
+.cv-error a { color: var(--blue); text-decoration: underline }
+.cv-hint { text-align: center; font: 400 11.5px var(--mono); color: var(--t3); margin: 0; padding: 4px 0 12px }
+@media (max-width: 640px) {
+  .cv-stage { padding: 0 6px 6px }
+  .cv-nav { position: absolute; bottom: 8px; z-index: 2; background: rgba(7,8,12,.85) }
+  .cv-prev { left: 12px } .cv-next { right: 12px }
+  .cv-img { max-height: calc(100dvh - 230px) }
+  /* keep the dialog (and the ◀ ▶ buttons) at a steady height when landscape and portrait scans alternate */
+  .cv-fig { min-height: min(480px, calc(100dvh - 330px)) }
+  .cv-hint { display: none }
+}
+
+/* ── Playground ── */
+.pg-panel { background: var(--s2); border: 1px solid var(--ln); border-radius: 20px; padding: 22px; min-width: 0 }
+.pg-panel:focus { outline: none }
+.pg-loading { color: var(--t2); font-size: 14px; margin: 0 }
+@media (max-width: 640px) { .pg-panel { padding: 14px } }
+
+.pg-btn {
+  font: 600 14px var(--font-body); color: #fff; background: var(--blue2); border: 0; border-radius: 12px; padding: 12px 20px; min-height: 44px; cursor: pointer; transition: filter .2s
+}
+.pg-btn:hover { filter: brightness(1.12) }
+.pg-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+.pg-btn.ghost { background: transparent; border: 1px solid var(--ln); color: var(--t1) }
+
+/* ── Sushi Bounce ── */
+/* Board size follows the reference: min(700px, 100%) x 430px (380px on viewports <= 700px) */
+.sb { display: grid; gap: 12px; min-width: 0; width: min(700px, 100%); margin: 0 auto }
+.sb-hud { display: flex; justify-content: space-between; align-items: center; gap: 12px; font: 500 14px var(--mono); color: var(--t2) }
+.sb-hud b { color: var(--t1); font-size: 18px }
+.sb-lives { display: inline-flex; gap: 6px; align-items: center }
+.sb-life { width: 22px; height: 14px }
+.sb-stage { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--ln); background: #0a0b10; width: 100%; height: 430px; margin: 0 auto }
+.sb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: ew-resize }
+.sb-stage:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+.sb-overlay { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; text-align: center; padding: 20px; background: rgba(6,7,11,.78); backdrop-filter: blur(3px) }
+.sb-overlay[hidden] { display: none }
+.sb-overlay h3 { font-size: 24px; margin: 0 }
+.sb-overlay p { margin: 0; color: var(--t2); font-size: 14px; line-height: 1.6; max-width: 36ch }
+.sb-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between }
+.sb-pad { display: none; gap: 10px }
+@media (hover: none), (max-width: 700px) { .sb-pad { display: flex } }
+@media (max-width: 700px) { .sb-stage { height: 380px } }
+.sb-key { font: 500 13px var(--mono); color: var(--t3) }
+.sb-pad button { min-width: 64px }
+@media (prefers-reduced-motion: reduce) { .cert-tile, .cert-thumb img, .cv-img { transition: none !important } }
+
+
+/* ==========================================================================
+   GitHub section v2: contribution calendar, live badges, honest empty states
+   ========================================================================== */
+.gh-graph { background: var(--s2); border: 1px solid var(--ln); border-radius: 18px; padding: 20px 22px; margin-bottom: 28px; min-width: 0 }
+.gh-graph-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 14px }
+.gh-graph-title { font-size: 15px; font-weight: 500; color: var(--t2); margin: 0 }
+.gh-graph-title strong { color: var(--t1); font-weight: 700; font-size: 18px }
+.gh-graph-link { display: inline-block; font-size: 13px; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; padding: 4px 0; min-height: 24px }
+.gh-graph-body { min-height: 190px }
+.gh-graph-msg { font-size: 14px; line-height: 1.65; color: var(--t2); margin: 0 }
+.hm-skeleton { height: 150px; border-radius: 10px; background: linear-gradient(90deg, var(--s3) 25%, rgba(255,255,255,.07) 50%, var(--s3) 75%); background-size: 300% 100%; animation: hm-pulse 1.5s linear infinite }
+@keyframes hm-pulse { from { background-position: 100% 0 } to { background-position: -100% 0 } }
+
+.hm-scroll { overflow-x: auto; padding-bottom: 8px }
+.hm-scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px }
+.hm-table { border-collapse: separate; border-spacing: 3px; font: 400 10.5px/1 var(--mono); color: var(--t3); table-layout: fixed }
+.hm-month { text-align: left; white-space: nowrap; overflow: visible; padding: 0 0 4px; font-weight: 400; height: 16px }
+.hm-corner { width: 30px }
+.hm-day { text-align: right; padding: 0 6px 0 0; font-weight: 400; white-space: nowrap; width: 30px }
+.hm-cell { width: 11px; min-width: 11px; height: 11px; padding: 0; border-radius: 2px; background: var(--s3); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05) }
+.hm-cell[data-level="1"] { background: rgba(52,211,153,.30) }
+.hm-cell[data-level="2"] { background: rgba(52,211,153,.52) }
+.hm-cell[data-level="3"] { background: rgba(52,211,153,.76) }
+.hm-cell[data-level="4"] { background: #34d399 }
+.hm-cell.hm-pad { background: transparent; box-shadow: none }
+.hm-cell:hover:not(.hm-pad) { outline: 1px solid rgba(255,255,255,.55) }
+.hm-cell:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px }
+.hm-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 10px; font-size: 12px; color: var(--t3) }
+.hm-status { margin: 0; color: var(--t2); min-height: 1.4em }
+.hm-legend { display: inline-flex; align-items: center; gap: 4px }
+.hm-swatch { display: inline-block }
+
+.gh-badge { display: inline-block; margin-left: 8px; padding: 3px 9px; border-radius: 999px; font: 500 10.5px var(--mono); letter-spacing: .04em; text-transform: none; color: var(--t2); border: 1px solid var(--ln); background: transparent; vertical-align: middle }
+.gh-badge.is-live { color: #34d399; border-color: rgba(52,211,153,.4); background: rgba(52,211,153,.08) }
+.repo-desc.is-empty { font-style: italic; color: var(--t3) }
+.repos-list[hidden] { display: none }
+@media (max-width: 640px) { .gh-graph { padding: 16px } }
+.hm-day { position: sticky; left: 0; background: var(--s2); z-index: 1 }
+.sb-stat { display: inline-flex; align-items: center; gap: 8px }
+.sb-label { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--t3) }
+.sb-overlay .sb-sub { font-size: 12.5px; color: var(--t3) }
+
+.sb-over-ico { font-size: 44px; line-height: 1 }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mustafa-portfolio-lyart.vercel.app/sitemap.xml
